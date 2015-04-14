@@ -41,7 +41,7 @@
   "Load the PlatformLevel"
   [system]
   (-> system
-      (prefab/instantiate "PlatformLevel" {})))
+      (prefab/instantiate "ShipLevel" {})))
 
 (defscreen main-screen
   :on-show

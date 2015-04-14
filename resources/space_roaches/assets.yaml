@@ -148,6 +148,10 @@
     name: PlatformMap
     path: space_roaches/platform.tmx
 
+  - asset: tiled-map
+    name: ShipMap
+    path: space_roaches/roach_level.tmx
+
   - asset: prefab
     name: PlatformLevel
     components:
@@ -156,6 +160,16 @@
         pixels-per-unit: 32
       - type: TiledMapSpawner
         tiled-map: PlatformMap
+        pixels-per-unit: 32
+
+  - asset: prefab
+    name: ShipLevel
+    components:
+      - type: OrthogonalTiledMapRendererComponent
+        tiled-map: ShipMap
+        pixels-per-unit: 32
+      - type: TiledMapSpawner
+        tiled-map: ShipMap
         pixels-per-unit: 32
 
   - asset: animation
@@ -413,3 +427,48 @@
       - type: EventHub
       - type: SoundPlayer
         audio-asset: SpaceRoachDeathSound
+
+# stars ...
+  - asset: texture
+    name: StarfieldTexture
+    path: space_roaches/Stars.png
+    wrap: repeat
+
+  - asset: prefab
+    name: StarField1
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        color: [0.5, 0.5, 0.5, 1]
+        layer: -1
+        tiling: [10, 10]
+
+  - asset: prefab
+    name: StarField2
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        layer: -1
+        color: [0.5, 0.5, 0.7, 1]
+        tiling: [20, 20]
+
+  - asset: prefab
+    name: StarField3
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        color: [0.7, 0.5, 0.5, 1]
+        layer: -1
+        tiling: [15, 15]

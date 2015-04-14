@@ -42,7 +42,6 @@
                                                    :state :moving-to-a
                                                    :timer (/ (com.badlogic.gdx.utils.TimeUtils/millis) 1000.0))))
 
-
 (defn- on-spawn
   "On spawn, set position-a to current position and position-b to position + offset"
   [system entity event]
