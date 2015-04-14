@@ -14,6 +14,7 @@
             [ripple.tiled-map :as tiled-map]
             [ripple.transform :as transform]
             [space-roaches.player :as player]
+            [space-roaches.level :as level]
             [space-roaches.roaches :as roaches])
   (:import [com.badlogic.gdx ApplicationListener]
            [com.badlogic.gdx.backends.lwjgl LwjglApplication]
@@ -31,7 +32,8 @@
                  audio/audio
                  tiled-map/level
                  player/player
-                 roaches/roaches])
+                 roaches/roaches
+                 level/level-systems])
 
 (def asset-sources ["space_roaches/assets.yaml"])
 
@@ -46,7 +48,8 @@
   (fn [screen entities]
 
     ;; Initialize Ripple
-    (reset! ripple/sys (ripple/initialize subsystems asset-sources on-initialized))
+    (reset! ripple/sys (-> (ripple/initialize subsystems asset-sources on-initialized)
+                           (assoc-in [:renderer :clear-color] [0.2 0.2 0.2 1.0])))
 
     ;; Use an orthographic camera
     (update! screen :renderer (stage) :camera (orthographic))

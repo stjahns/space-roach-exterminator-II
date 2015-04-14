@@ -11,6 +11,7 @@
             [ripple.subsystem :as s])
   (:import [com.badlogic.gdx.math Vector2]
            [com.badlogic.gdx Input$Keys]
+           [com.badlogic.gdx.math MathUtils]
            [com.badlogic.gdx Gdx]))
 
 (def cardinal-directions-to-aim-states
@@ -151,8 +152,10 @@
                             (.scl (.cpy aim-direction) bullet-offset))
         bullet-velocity (.scl aim-direction bullet-speed)]
     (.play fire-sound)
+    
     (prefab/instantiate system bullet-prefab {:physicsbody {:x (.x bullet-origin)
                                                             :y (.y bullet-origin)
+                                                            :angle (MathUtils/atan2 (- (.x aim-direction)) (.y aim-direction))
                                                             :velocity-x (.x bullet-velocity)
                                                             :velocity-y (.y bullet-velocity)}})))
 (defn- handle-mouse-input
@@ -224,6 +227,19 @@
            :walking-up-animation {:asset true}
            :walking-up-forward-animation {:asset true}])
 
+(defn handle-bullet-lifetime
+  [system entity]
+  (let [lifetime (:lifetime (e/get-component system entity 'Bullet))
+        lifetime (- lifetime 0.01)]
+    (-> system
+        (e/update-component entity 'Bullet #(assoc % :lifetime lifetime))
+        (when-> (<= lifetime 0.0)
+                (c/destroy-entity entity)))))
+
+(c/defcomponent Bullet
+  :fields [:lifetime {:default 1}]
+  :on-pre-render handle-bullet-lifetime)
+
 (s/defsubsystem player
-  :component-defs ['Player]
+  :component-defs ['Player 'Bullet]
   :on-touch-down handle-mouse-input)

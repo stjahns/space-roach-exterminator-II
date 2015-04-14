@@ -9,6 +9,7 @@
             [ripple.prefab :as prefab]
             [ripple.assets :as a]
             [ripple.transform :as transform]
+            [ripple.physics :as physics]
             [ripple.subsystem :as s]))
 
 ;; + Roaches move towards player
@@ -64,9 +65,49 @@
       (when-> (can-see-player? system entity)
         (move-towards-player entity))))
 
+(defn- disable-collision
+  "Disable collision by switching to a different category, and setting mask to 0 (collide with nothing)"
+  [body]
+ (let [new-filter (physics/create-filter :category 2 :mask 0)]
+    (doseq [fixture (.getFixtureList body)]
+      (.setFilterData fixture new-filter))))
+
+(defn- spawn-gibs
+  [system entity]
+  (let [gib-prefabs (:gib-prefabs (e/get-component system entity 'SpaceRoach))
+        [x y] (:position (e/get-component system entity 'Transform))]
+    (-> system
+        (for-> [gib gib-prefabs]
+               (prefab/instantiate gib {:physicsbody {:x x
+                                                      :y y
+                                                      :angular-velocity (* 5 (- 1 (rand 2)))
+                                                      :velocity-x (* 3 (- 1 (rand 2)))
+                                                      :velocity-y (* 3 (- 1 (rand 2)))}})))))
+
+(defn- kill-roach
+  [system entity]
+  (doto (:body (e/get-component system entity 'PhysicsBody))
+    (disable-collision))
+  (-> system
+      (spawn-gibs entity)
+      (e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
+      (e/update-component entity 'SpaceRoach #(assoc % :dead true))))
+
+(defn on-collide
+  "When bullet hits a roach, roach should explode"
+  [system entity event]
+  (let [other-entity (-> (:other-fixture event)
+                         (.getUserData)
+                         (:entity))]
+    (-> system
+        (when-> (e/get-component system other-entity 'Bullet)
+               (kill-roach entity)))))
+
 (c/defcomponent SpaceRoach
+  :on-event [:on-collision-start on-collide]
   :on-pre-render update-roach
-  :fields [:speed {:default 1.0}])
+  :fields [:speed {:default 1.0}
+           :gib-prefabs {:default []}])
 
 (s/defsubsystem roaches
   :component-defs ['SpaceRoach])

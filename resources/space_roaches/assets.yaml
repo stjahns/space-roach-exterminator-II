@@ -11,14 +11,112 @@
       - [0, 0]
       - [1, 0]
 
+  - asset: texture-region
+    name: SRoachGib1
+    texture: RoachSpriteSheet
+    top-left: [2, 65]
+    size: [16, 11]
+
+  - asset: texture-region
+    name: SRoachGib2
+    texture: RoachSpriteSheet
+    top-left: [17, 64]
+    size: [11, 9]
+
+  - asset: texture-region
+    name: SRoachGib3
+    texture: RoachSpriteSheet
+    top-left: [36, 69]
+    size: [11, 14]
+
+  - asset: texture-region
+    name: SRoachGib4
+    texture: RoachSpriteSheet
+    top-left: [46, 69]
+    size: [11, 13]
+
+  - asset: texture-region
+    name: SRoachGib5
+    texture: RoachSpriteSheet
+    top-left: [41, 81]
+    size: [12, 12]
+
+  - asset: prefab
+    name: RoachGib1
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib1
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib2
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib2
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.125
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib3
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib3
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib4
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib4
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib5
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib5
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
   - asset: prefab
     name: SpaceRoach
     components:
       - type: Transform
       - type: SpriteRenderer
         texture: RoachSpriteSheet
-        tile-size: [32, 32]
-        tile-indices: [0, 0]
       - type: AnimationController
         loop: true
         animation: RoachWalk
@@ -33,6 +131,7 @@
             friction: 0.7
       - type: EventHub
       - type: SpaceRoach
+        gib-prefabs: [RoachGib1, RoachGib2, RoachGib3, RoachGib4, RoachGib5]
         speed: 0.01
 
   - asset: texture
@@ -42,8 +141,8 @@
   - asset: texture-region
     name: PlayerSprite1
     texture: PlayerSpriteSheet
-    tile-size: [32, 32]
-    tile-indices: [0, 0]
+    size: [32, 32]
+    top-left: [0, 0]
 
   - asset: tiled-map
     name: PlatformMap
@@ -154,10 +253,18 @@
       - [2, 0]
       - [3, 0]
 
+      
+  - asset: texture
+    name: BulletSprite
+    path: space_roaches/sprites/Bullet.png
+
   - asset: prefab
     name: BulletPrefab
-    components: # TODO - need some kind of 'Projectile' component to handle removing old projectiles..
+    components:
       - type: Transform
+      - type: Bullet
+      - type: SpriteRenderer
+        texture: BulletSprite
       - type: PhysicsBody
         body-type: dynamic
         fixed-rotation: false
@@ -208,8 +315,6 @@
       - type: EventHub
       - type: SpriteRenderer
         texture: PlayerSprite1
-        tile-size: [32, 32]
-        tile-indices: [0, 0]
 
   - asset: prefab
     name: AreaTrigger
@@ -225,23 +330,50 @@
     path: space_roaches/sprites/Block.png
 
   - asset: prefab
-    name: BlockPrefab
+    name: DoorSpritePrefab
     components:
       - type: SpriteRenderer
         texture: BlockSprite
-        tile-size: [32, 32]
-        tile-indices: [0, 0]
+        color: [0.5, 0.5, 0.5, 1.0]
       - type: Transform
+
+  - asset: prefab
+    name: DoorPrefab
+    children:
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, 0]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, 0]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, 1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, 1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, -1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, -1]
+    components:
+      - type: Transform
+      - type: EventHub
       - type: PhysicsBody
-        body-type: static
+        body-type: kinematic
         velocity-x: 0
         velocity-y: 0
         fixtures:
           - shape: box
-            width: 1
-            height: 1
+            width: 2
+            height: 3
             density: 1
             friction: 0.7
+      - type: Mover
+        offset: [0.0, 2.0]
+    
 
   - asset: prefab
     name: BlockTilePrefab

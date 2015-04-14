@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#000000" nextobjectid="28">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#000000" nextobjectid="39">
  <tileset firstgid="1" name="ShipTiles" tilewidth="32" tileheight="32">
   <image source="sprites/ShipTiles.png" width="160" height="224"/>
  </tileset>
@@ -22,8 +22,8 @@
   </object>
   <object id="13" name="trigger1" type="AreaTrigger" x="512" y="686.832" width="192" height="64">
    <properties>
-    <property name="+on-enter" value="roachsound1:play"/>
-    <property name="+on-exit" value="roachsound1:play"/>
+    <property name="+on-enter" value="door:move"/>
+    <property name="+on-exit" value="door:reset"/>
    </properties>
   </object>
   <object id="20" name="MusicPlayer" type="MusicPlayer" x="384" y="64" width="32" height="32" visible="0"/>
@@ -34,5 +34,6 @@
   <object id="27" name="Roach2" type="SpaceRoach" x="810.667" y="721.333">
    <ellipse/>
   </object>
+  <object id="36" name="door" type="DoorPrefab" x="608" y="720"/>
  </objectgroup>
 </map>
