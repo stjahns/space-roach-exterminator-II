@@ -35,7 +35,9 @@
                  roaches/roaches
                  level/level-systems])
 
-(def asset-sources ["space_roaches/assets.yaml"])
+(def asset-sources ["space_roaches/player_assets.yaml"
+                    "space_roaches/level_assets.yaml"
+                    "space_roaches/roach_assets.yaml"])
 
 (defn on-initialized
   "Load the PlatformLevel"

@@ -1,0 +1,157 @@
+  - asset: music
+    name: SpaceRoachesMusic
+    path: space_roaches/audio/space_roaches.ogg
+
+  - asset: sound
+    name: SpaceRoachDeathSound
+    path: space_roaches/audio/RoachDeath.wav
+
+  - asset: prefab
+    name: MusicPlayer
+    components:
+      - type: MusicPlayer
+        audio-asset: SpaceRoachesMusic
+
+  - asset: texture
+    name: StarfieldTexture
+    path: space_roaches/Stars.png
+    wrap: repeat
+
+  - asset: prefab
+    name: StarField1
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        color: [0.5, 0.5, 0.5, 1]
+        layer: -1
+        tiling: [10, 10]
+
+  - asset: prefab
+    name: StarField2
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        layer: -1
+        color: [0.5, 0.5, 0.7, 1]
+        tiling: [20, 20]
+
+  - asset: prefab
+    name: StarField3
+    components:
+      - type: Transform
+        scale: [30, 30]
+      - type: SpriteScroller
+        speed: [-80, 0]
+      - type: SpriteRenderer
+        texture: StarfieldTexture
+        color: [0.7, 0.5, 0.5, 1]
+        layer: -1
+        tiling: [15, 15]
+
+  - asset: prefab
+    name: BlockTilePrefab
+    components:
+      # Needs no SpriteRenderer as it is intended to be rendered by TiledMapRenderer
+      - type: Transform
+      - type: PhysicsBody
+        body-type: static
+        velocity-x: 0
+        velocity-y: 0
+        fixtures:
+          - shape: box
+            width: 1
+            height: 1
+            density: 1
+            friction: 0.7
+
+  - asset: tiled-map
+    name: PlatformMap
+    path: space_roaches/platform.tmx
+
+  - asset: tiled-map
+    name: ShipMap
+    path: space_roaches/roach_level.tmx
+
+  - asset: prefab
+    name: PlatformLevel
+    components:
+      - type: OrthogonalTiledMapRendererComponent
+        tiled-map: PlatformMap
+        pixels-per-unit: 32
+      - type: TiledMapSpawner
+        tiled-map: PlatformMap
+        pixels-per-unit: 32
+
+  - asset: prefab
+    name: ShipLevel
+    components:
+      - type: OrthogonalTiledMapRendererComponent
+        tiled-map: ShipMap
+        pixels-per-unit: 32
+      - type: TiledMapSpawner
+        tiled-map: ShipMap
+        pixels-per-unit: 32
+
+  - asset: prefab
+    name: AreaTrigger
+    components:
+      - type: Transform
+      - type: EventHub
+      - type: AreaTrigger
+
+  - asset: texture
+    name: BlockSprite
+    path: space_roaches/sprites/Block.png
+
+  - asset: prefab
+    name: DoorSpritePrefab
+    components:
+      - type: SpriteRenderer
+        texture: BlockSprite
+        color: [0.5, 0.5, 0.5, 1.0]
+      - type: Transform
+
+  - asset: prefab
+    name: DoorPrefab
+    children:
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, 0]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, 0]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, 1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, 1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [0.5, -1]
+      - prefab: DoorSpritePrefab
+        transform:
+          position: [-0.5, -1]
+    components:
+      - type: Transform
+      - type: EventHub
+      - type: PhysicsBody
+        body-type: kinematic
+        velocity-x: 0
+        velocity-y: 0
+        fixtures:
+          - shape: box
+            width: 2
+            height: 3
+            density: 1
+            friction: 0.7
+      - type: Mover
+        offset: [0.0, 2.0]

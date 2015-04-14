@@ -1,0 +1,135 @@
+  - asset: texture
+    name: RoachSpriteSheet
+    path: space_roaches/sprites/SpaceRat.png
+
+  - asset: animation
+    name: RoachWalk
+    texture: RoachSpriteSheet
+    frame-size: [32, 32]
+    frame-duration: 0.2
+    frames:
+      - [0, 0]
+      - [1, 0]
+
+  - asset: texture-region
+    name: SRoachGib1
+    texture: RoachSpriteSheet
+    top-left: [2, 65]
+    size: [16, 11]
+
+  - asset: texture-region
+    name: SRoachGib2
+    texture: RoachSpriteSheet
+    top-left: [17, 64]
+    size: [11, 9]
+
+  - asset: texture-region
+    name: SRoachGib3
+    texture: RoachSpriteSheet
+    top-left: [36, 69]
+    size: [11, 14]
+
+  - asset: texture-region
+    name: SRoachGib4
+    texture: RoachSpriteSheet
+    top-left: [46, 69]
+    size: [11, 13]
+
+  - asset: texture-region
+    name: SRoachGib5
+    texture: RoachSpriteSheet
+    top-left: [41, 81]
+    size: [12, 12]
+
+  - asset: prefab
+    name: RoachGib1
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib1
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib2
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib2
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.125
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib3
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib3
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib4
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib4
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: RoachGib5
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: SRoachGib5
+      - type: PhysicsBody
+        body-type: dynamic
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: SpaceRoach
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: RoachSpriteSheet
+      - type: AnimationController
+        loop: true
+        animation: RoachWalk
+        play-on-start: true
+      - type: PhysicsBody
+        body-type: kinematic
+        fixed-rotation: true
+        fixtures:
+          - shape: circle
+            radius: 0.5
+            density: 1
+            friction: 0.7
+      - type: EventHub
+      - type: SpaceRoach
+        gib-prefabs: [RoachGib1, RoachGib2, RoachGib3, RoachGib4, RoachGib5]
+        speed: 0.01
