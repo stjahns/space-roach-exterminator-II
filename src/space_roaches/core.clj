@@ -1,17 +1,99 @@
 (ns space-roaches.core
-  (:require [ripple.core]
-            [ripple.repl]
-            [space_roaches.player :as player])
+  (:require [play-clj.core :refer :all]
+            [ripple.core :as ripple]
+            [ripple.rendering :as rendering]
+            [ripple.sprites :as sprites]
+            [ripple.physics :as physics]
+            [ripple.audio :as audio]
+            [ripple.components :as c]
+            [ripple.assets :as a]
+            [ripple.subsystem :as subsystem]
+            [ripple.prefab :as prefab]
+            [ripple.event :as event]
+            [ripple.tiled-map :as tiled-map]
+            [ripple.transform :as transform]
+            [space-roaches.player :as player])
   (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication]
+           [com.badlogic.gdx ApplicationListener]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
-(def config { :subsystems [player/player] ;; TODO declare built-in subsystems...
-              :asset-sources "assets.yaml" })
+(declare shutdown restart)
 
+(def subsystems [transform/transform
+                 event/events
+                 rendering/rendering
+                 physics/physics
+                 prefab/prefabs
+                 sprites/sprites
+                 audio/audio
+                 tiled-map/level
+                 player/player])
+
+(def asset-sources ["space_roaches/assets.yaml"])
+
+(defn on-initialized
+  "Load the PlatformLevel"
+  [system]
+  (-> system
+      (prefab/instantiate "PlatformLevel" {})))
+
+(defscreen main-screen
+  :on-show
+  (fn [screen entities]
+
+    ;; Initialize Ripple
+    (reset! ripple/sys (ripple/initialize subsystems asset-sources on-initialized))
+
+    ;; Use an orthographic camera
+    (update! screen :renderer (stage) :camera (orthographic))
+
+    nil)
+
+  :on-touch-down
+  (fn [screen entities]
+    (reset! ripple/sys (-> @ripple/sys (subsystem/on-system-event :on-touch-down)))
+    nil)
+
+  :on-render
+  (fn [screen entities]
+    (reset! ripple/sys (-> @ripple/sys
+                    (subsystem/on-system-event :on-pre-render)
+                    (subsystem/on-system-event :on-render)))
+    (when (:restart @ripple/sys)
+      (shutdown)
+      (restart))
+    nil)
+
+  :on-resize
+  (fn [screen entities]
+    (reset! ripple/sys (-> @ripple/sys (subsystem/on-system-event :on-resize)))
+    nil))
+
+(defgame space-roaches
+  :on-create
+  (fn [this]
+    (set-screen! this main-screen)))
+
+(defscreen blank-screen
+  :on-render
+  (fn [screen entities]
+    (clear!)))
+
+(defn shutdown []
+  (set-screen! space-roaches blank-screen)
+  (Thread/sleep 100)
+  (subsystem/on-system-event @ripple/sys :on-shutdown))
+
+(defn restart []
+  (set-screen! space-roaches main-screen))
+
+;; For exception handling...
+(set-screen-wrapper! (fn [screen screen-fn]
+                       (try (screen-fn)
+                         (catch Exception e
+                           (.printStackTrace e)
+                           (set-screen! space-roaches blank-screen)))))
 (defn -main []
-
-  ;; TODO - pass config into create-game
-  (let [game (ripple.core/create-game)]
-    (LwjglApplication. game "Space Roach Exterminator II" 800 600)
-    (Keyboard/enableRepeatEvents true)))
+  (LwjglApplication. space-roaches "Space Roach Exterminator II" 800 600)
+  (Keyboard/enableRepeatEvents true))
