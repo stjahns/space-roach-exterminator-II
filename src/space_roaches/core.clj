@@ -1,20 +1,22 @@
 (ns space-roaches.core
   (:require [play-clj.core :refer :all]
-            [ripple.core :as ripple]
-            [ripple.rendering :as rendering]
-            [ripple.sprites :as sprites]
-            [ripple.physics :as physics]
+            [ripple.repl :as repl]
+            [ripple.assets :as a]
             [ripple.audio :as audio]
             [ripple.components :as c]
-            [ripple.assets :as a]
-            [ripple.subsystem :as subsystem]
-            [ripple.prefab :as prefab]
+            [ripple.core :as ripple]
             [ripple.event :as event]
+            [ripple.physics :as physics]
+            [ripple.prefab :as prefab]
+            [ripple.rendering :as rendering]
+            [ripple.sprites :as sprites]
+            [ripple.subsystem :as subsystem]
             [ripple.tiled-map :as tiled-map]
             [ripple.transform :as transform]
-            [space-roaches.player :as player])
-  (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication]
-           [com.badlogic.gdx ApplicationListener]
+            [space-roaches.player :as player]
+            [space-roaches.roaches :as roaches])
+  (:import [com.badlogic.gdx ApplicationListener]
+           [com.badlogic.gdx.backends.lwjgl LwjglApplication]
            [org.lwjgl.input Keyboard])
   (:gen-class))
 
@@ -28,7 +30,8 @@
                  sprites/sprites
                  audio/audio
                  tiled-map/level
-                 player/player])
+                 player/player
+                 roaches/roaches])
 
 (def asset-sources ["space_roaches/assets.yaml"])
 
@@ -75,6 +78,12 @@
   (fn [this]
     (set-screen! this main-screen)))
 
+(defn -main []
+  (LwjglApplication. space-roaches "Space Roach Exterminator II" 800 600)
+  (Keyboard/enableRepeatEvents true))
+
+;; For development ...
+
 (defscreen blank-screen
   :on-render
   (fn [screen entities]
@@ -94,6 +103,22 @@
                          (catch Exception e
                            (.printStackTrace e)
                            (set-screen! space-roaches blank-screen)))))
-(defn -main []
-  (LwjglApplication. space-roaches "Space Roach Exterminator II" 800 600)
-  (Keyboard/enableRepeatEvents true))
+
+(defn reload-all []
+  (shutdown)
+  (on-gl (set-screen! space-roaches main-screen)))
+
+(defn reload-and-require-all []
+  (shutdown)
+
+  (println "Recompiling...")
+
+  (require 'space-roaches.core :reload-all)
+
+  (println "Reloading...")
+
+  (on-gl (set-screen! space-roaches main-screen)))
+
+(defn rra [] (reload-and-require-all))
+(defn ra [] (reload-all))
+

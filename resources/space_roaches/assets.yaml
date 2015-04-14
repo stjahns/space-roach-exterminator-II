@@ -1,4 +1,41 @@
   - asset: texture
+    name: RoachSpriteSheet
+    path: space_roaches/sprites/SpaceRat.png
+
+  - asset: animation
+    name: RoachWalk
+    texture: RoachSpriteSheet
+    frame-size: [32, 32]
+    frame-duration: 0.2
+    frames:
+      - [0, 0]
+      - [1, 0]
+
+  - asset: prefab
+    name: SpaceRoach
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: RoachSpriteSheet
+        tile-size: [32, 32]
+        tile-indices: [0, 0]
+      - type: AnimationController
+        loop: true
+        animation: RoachWalk
+        play-on-start: true
+      - type: PhysicsBody
+        body-type: kinematic
+        fixed-rotation: true
+        fixtures:
+          - shape: circle
+            radius: 0.5
+            density: 1
+            friction: 0.7
+      - type: EventHub
+      - type: SpaceRoach
+        speed: 0.01
+
+  - asset: texture
     name: PlayerSpriteSheet
     path: space_roaches/sprites/PlayerV2.png
 
@@ -168,6 +205,7 @@
             radius: 0.5
             density: 1
             friction: 0.7
+      - type: EventHub
       - type: SpriteRenderer
         texture: PlayerSprite1
         tile-size: [32, 32]

@@ -1,4 +1,5 @@
 (ns space-roaches.player
+  (:use [pallet.thread-expr])
   (:require [play-clj.core :refer :all]
             [brute.entity :as e]
             [ripple.components :as c]
@@ -6,6 +7,7 @@
             [ripple.sprites :as sprites]
             [ripple.prefab :as prefab]
             [ripple.assets :as a]
+            [ripple.physics :as physics]
             [ripple.subsystem :as s])
   (:import [com.badlogic.gdx.math Vector2]
            [com.badlogic.gdx Input$Keys]
@@ -157,7 +159,9 @@
   [system]
   (let [entity (-> (e/get-all-entities-with-component system 'Player)
                    (first))]
-    (player-fire system entity)))
+    (-> system
+        (when-> (not (:dead (e/get-component system entity 'Player)))
+                (player-fire entity)))))
 
 (defn- update-camera-target
   [system entity]
@@ -170,13 +174,40 @@
   [system entity]
   (let [player (e/get-component system entity 'Player)]
     (-> system
-        (update-state entity)
-        (update-player-aim entity)
-        (update-player-movement entity)
-        (update-camera-target entity))))
+        (when-> (not (:dead player))
+                (update-state entity)
+                (update-player-aim entity)
+                (update-player-movement entity)
+                (update-camera-target entity)))))
+
+(defn- disable-collision
+  "Disable collision by switching to a different category, and setting mask to 0 (collide with nothing)"
+  [body]
+ (let [new-filter (physics/create-filter :category 2 :mask 0)]
+    (doseq [fixture (.getFixtureList body)]
+      (.setFilterData fixture new-filter))))
+
+(defn- kill-player
+  [system entity]
+  (doto (:body (e/get-component system entity 'PhysicsBody))
+    (disable-collision))
+  (-> system
+      (e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
+      (e/update-component entity 'Player #(assoc % :dead true))))
+
+(defn on-collide
+  "When roach hits a player, player dies!"
+  [system entity event]
+  (let [other-entity (-> (:other-fixture event)
+                         (.getUserData)
+                         (:entity))]
+    (-> system
+        (when-> (e/get-component system other-entity 'SpaceRoach)
+               (kill-player entity)))))
 
 (c/defcomponent Player
   :on-pre-render update-player
+  :on-event [:on-collision-start on-collide]
   :fields [:move-force {:default 100}
            :bullet-prefab nil
            :bullet-speed {:default 100}
