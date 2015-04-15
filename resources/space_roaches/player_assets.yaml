@@ -139,6 +139,7 @@
       - type: Transform
       - type: SpriteRenderer
         texture: PlayerHeadGibSprite
+        layer: 1
       - type: PhysicsBody
         body-type: dynamic
         category: 4 # 'decorations'
@@ -154,6 +155,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: PlayerTorsoGibSprite
       - type: PhysicsBody
         body-type: dynamic
@@ -170,6 +172,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: PlayerArmGibSprite
       - type: PhysicsBody
         body-type: dynamic
@@ -186,6 +189,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: PlayerLegGibSprite
       - type: PhysicsBody
         body-type: dynamic
@@ -202,6 +206,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: PlayerGunGibSprite
       - type: PhysicsBody
         body-type: dynamic
@@ -224,6 +229,7 @@
       - type: EventHub
       - type: Bullet
       - type: SpriteRenderer
+        layer: 1
         texture: BulletSprite
       - type: PhysicsBody
         body-type: dynamic
@@ -239,6 +245,10 @@
   - asset: sound
     name: FireSound
     path: space_roaches/audio/Shoot.wav
+
+  - asset: sound
+    name: PlayerDeathSound
+    path: space_roaches/audio/PlayerDeath.wav
 
   - asset: prefab
     name: Player
@@ -259,6 +269,7 @@
         walking-down-forward-animation: PlayerWalkingAimDownForward
         walk-animation: PlayerWalk
         fire-sound: FireSound
+        death-sound: PlayerDeathSound
         gib-prefabs: [PlayerHeadGib, PlayerTorsoGib, PlayerLegGib, PlayerArmGib, PlayerLegGib, PlayerArmGib, PlayerGunGib]
       - type: Transform
       - type: AnimationController

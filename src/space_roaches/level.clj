@@ -75,6 +75,7 @@
   [system entity]
   (let [spawner (e/get-component system entity 'Spawner)
         [x y] (:position (e/get-component system entity 'Transform))]
+    (.play (:spawn-sound spawner))
     (-> system
         (e/update-component entity 'Spawner #(assoc % :spawn-timer nil))
         (prefab/instantiate (:prefab spawner) {:transform {:position [x y]}
@@ -104,6 +105,7 @@
 (c/defcomponent Spawner
   :fields [:spawn-delay {:default 5.0}
            :spawn-timer {:default nil}
+           :spawn-sound {:asset true}
            :prefab nil]
   :on-pre-render update-spawner
   :on-event [:on-spawn spawner-on-spawn

@@ -85,6 +85,8 @@
   [system entity]
   (doto (:body (e/get-component system entity 'PhysicsBody))
     (disable-collision))
+  (let [roach (e/get-component system entity 'SpaceRoach)]
+    (.play (:death-sound roach)))
   (-> system
       (spawn-gibs entity)
       (level/notify-destroyed entity)
@@ -103,6 +105,7 @@
   :on-event [:take-damage on-damaged]
   :on-pre-render update-roach
   :fields [:speed {:default 1.0}
+           :death-sound {:asset true}
            :gib-prefabs {:default []}])
 
 (s/defsubsystem roaches

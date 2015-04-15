@@ -2,10 +2,6 @@
     name: SpaceRoachesMusic
     path: space_roaches/audio/space_roaches.ogg
 
-  - asset: sound
-    name: SpaceRoachDeathSound
-    path: space_roaches/audio/RoachDeath.wav
-
   - asset: prefab
     name: MusicPlayer
     components:
@@ -166,7 +162,11 @@
     name: RoachSpawnerSprite
     texture: LevelDecorationsSpriteSheet
     size: [32, 32]
-    top-left: [0, 0]
+    top-left: [32, 0]
+
+  - asset: sound
+    name: GratePopSound
+    path: space_roaches/audio/GratePop.wav
 
   - asset: prefab
     name: RoachSpawner
@@ -176,4 +176,5 @@
       - type: SpriteRenderer
         texture: RoachSpawnerSprite
       - type: Spawner
+        spawn-sound: GratePopSound
         prefab: SpaceRoach

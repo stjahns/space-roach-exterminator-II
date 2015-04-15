@@ -52,6 +52,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: SRoachGib1
       - type: PhysicsBody
         body-type: dynamic
@@ -68,6 +69,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: SRoachGib2
       - type: PhysicsBody
         body-type: dynamic
@@ -84,6 +86,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: SRoachGib3
       - type: PhysicsBody
         body-type: dynamic
@@ -100,6 +103,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: SRoachGib4
       - type: PhysicsBody
         body-type: dynamic
@@ -116,6 +120,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
+        layer: 1
         texture: SRoachGib5
       - type: PhysicsBody
         body-type: dynamic
@@ -126,6 +131,10 @@
             radius: 0.25
             density: 0.2
             friction: 0.7
+
+  - asset: sound
+    name: SpaceRoachDeathSound
+    path: space_roaches/audio/RoachDeath.wav
 
   - asset: prefab
     name: SpaceRoach
@@ -150,4 +159,5 @@
       - type: SpawnedEntity
       - type: SpaceRoach
         gib-prefabs: [RoachGib1, RoachGib2, RoachGib3, RoachGib4, RoachGib5]
+        death-sound: SpaceRoachDeathSound
         speed: 0.01

@@ -208,6 +208,8 @@
   [system entity]
   (doto (:body (e/get-component system entity 'PhysicsBody))
     (disable-collision))
+  (let [player (e/get-component system entity 'Player)]
+    (.play (:death-sound player)))
   (-> system
       (spawn-gibs entity)
       (e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
@@ -231,6 +233,7 @@
            :bullet-speed {:default 100}
            :bullet-offset {:default 1}
            :fire-sound {:asset true}
+           :death-sound {:asset true}
            :walk-animation {:asset true}
            :idle-animation {:asset true}
            :idle-down-forward-animation {:asset true}
