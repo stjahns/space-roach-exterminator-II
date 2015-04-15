@@ -166,3 +166,4 @@
       - type: EventHub
       - type: SpriteRenderer
         texture: PlayerSprite1
+        layer: 1

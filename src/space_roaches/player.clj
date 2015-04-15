@@ -154,7 +154,8 @@
         bullet-velocity (.scl aim-direction bullet-speed)]
     (.play fire-sound)
     
-    (prefab/instantiate system bullet-prefab {:physicsbody {:x (.x bullet-origin)
+    (prefab/instantiate system bullet-prefab {:bullet {:source-entity entity} ;; Prevents bullets from hitting self..
+                                              :physicsbody {:x (.x bullet-origin)
                                                             :y (.y bullet-origin)
                                                             :angle (MathUtils/atan2 (- (.x aim-direction)) (.y aim-direction))
                                                             :velocity-x (.x bullet-velocity)
@@ -239,18 +240,26 @@
 
 (defn- on-bullet-hit
   [system entity event]
-  (let [other-entity (-> (:other-fixture event)
+  (let [bullet (e/get-component system entity 'Bullet)
+        other-entity (-> (:other-fixture event)
                          (.getUserData)
                          (:entity))]
     (-> system
-        (event/send-event other-entity {:event-id :take-damage})
-        (c/destroy-entity entity))))
+        (when-> (not (= (:source-entity bullet) other-entity))
+          (event/send-event other-entity {:event-id :take-damage})
+          (c/destroy-entity entity)))))
 
 (c/defcomponent Bullet
-  :fields [:lifetime {:default 1}]
+  :fields [:lifetime {:default 1}
+           :source-entity nil]
   :on-pre-render handle-bullet-lifetime
   :on-event [:on-collision-start on-bullet-hit])
 
+(defn on-damaged
+  [system entity event]
+  (kill-player system entity))
+
 (s/defsubsystem player
+  :on-event [:take-damage on-damaged]
   :component-defs ['Player 'Bullet]
   :on-touch-down handle-mouse-input)

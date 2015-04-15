@@ -133,6 +133,7 @@
       - type: Transform
       - type: SpriteRenderer
         texture: RoachSprite
+        layer: 1
       - type: AnimationController
         loop: true
         animation: RoachWalk
