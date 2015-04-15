@@ -2,6 +2,7 @@
   (:use [pallet.thread-expr])
   (import [com.badlogic.gdx.physics.box2d RayCastCallback])
   (:require [brute.entity :as e]
+            [space-roaches.level :as level]
             [ripple.vector :as vector]
             [ripple.components :as c]
             [ripple.rendering :as r]
@@ -11,10 +12,6 @@
             [ripple.transform :as transform]
             [ripple.physics :as physics]
             [ripple.subsystem :as s]))
-
-;; + Roaches move towards player
-;; + Player dies when roach touches
-;; + Roaches die when shot
 
 (defn get-player-entity
   "Get the player entity, assuming a single player"
@@ -90,8 +87,13 @@
     (disable-collision))
   (-> system
       (spawn-gibs entity)
-      (e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
-      (e/update-component entity 'SpaceRoach #(assoc % :dead true))))
+      (level/notify-destroyed entity)
+
+      ;(e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
+      ;(e/update-component entity 'SpaceRoach #(assoc % :dead true))
+
+      ;; Just destroy the entity for now...
+      (c/destroy-entity entity)))
 
 (defn on-collide
   "When bullet hits a roach, roach should explode"

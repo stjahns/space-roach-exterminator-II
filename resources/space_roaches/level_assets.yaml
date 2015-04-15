@@ -155,3 +155,25 @@
             friction: 0.7
       - type: Mover
         offset: [0.0, 2.0]
+
+# Spawners
+
+  - asset: texture
+    name: LevelDecorationsSpriteSheet
+    path: space_roaches/LevelDecorations.png
+
+  - asset: texture-region
+    name: RoachSpawnerSprite
+    texture: LevelDecorationsSpriteSheet
+    size: [32, 32]
+    top-left: [0, 0]
+
+  - asset: prefab
+    name: RoachSpawner
+    components:
+      - type: Transform
+      - type: EventHub
+      - type: SpriteRenderer
+        texture: RoachSpawnerSprite
+      - type: Spawner
+        prefab: SpaceRoach

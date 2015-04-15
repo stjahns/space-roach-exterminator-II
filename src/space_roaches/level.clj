@@ -3,7 +3,12 @@
   (:require [brute.entity :as e]
             [ripple.components :as c]
             [ripple.vector :as vector]
+            [ripple.prefab :as prefab]
+            [ripple.event :as event]
             [ripple.subsystem :as s]))
+
+;; Mover component
+;; TODO - This general enough to move to ripple core
 
 (defn- do-move
   [system entity target-position target-state]
@@ -63,5 +68,54 @@
              :move move-to-b
              :reset move-to-a])
 
+;; Spawner component
+;; Spawns an entity.
+
+(defn- spawner-spawn-prefab
+  [system entity]
+  (let [spawner (e/get-component system entity 'Spawner)
+        [x y] (:position (e/get-component system entity 'Transform))]
+    (-> system
+        (e/update-component entity 'Spawner #(assoc % :spawn-timer nil))
+        (prefab/instantiate (:prefab spawner) {:transform {:position [x y]}
+                                               :physicsbody {:x x :y y}
+                                               :spawnedentity {:spawner-id entity}}))))
+
+(defn- spawner-on-spawn
+  [system entity event]
+  (spawner-spawn-prefab system entity))
+
+(defn- spawner-on-entity-destroyed
+  "Set spawn-timer to spawn after spawn-delay"
+  [system entity event]
+  (let [spawner (e/get-component system entity 'Spawner)]
+    (e/update-component system entity 'Spawner #(assoc % :spawn-timer
+                                                       (+ (com.badlogic.gdx.utils.TimeUtils/millis)
+                                                          (* 1000 (:spawn-delay spawner)))))))
+
+(defn- update-spawner
+  [system entity]
+  (let [spawner (e/get-component system entity 'Spawner)]
+    (-> system
+        (when-> (and (:spawn-timer spawner)
+                     (< (:spawn-timer spawner) (com.badlogic.gdx.utils.TimeUtils/millis)))
+                (spawner-spawn-prefab entity)))))
+
+(c/defcomponent Spawner
+  :fields [:spawn-delay {:default 5.0}
+           :spawn-timer {:default nil}
+           :prefab nil]
+  :on-pre-render update-spawner
+  :on-event [:on-spawn spawner-on-spawn
+             :on-entity-destroyed spawner-on-entity-destroyed])
+
+(c/defcomponent SpawnedEntity
+  :fields [:spawner-id nil])
+
+(defn notify-destroyed
+  [system entity]
+  (let [spawner (:spawner-id (e/get-component system entity 'SpawnedEntity))]
+    (event/send-event system spawner {:event-id :on-entity-destroyed})))
+
 (s/defsubsystem level-systems
-  :component-defs ['Mover])
+  :component-defs ['Mover, 'Spawner, 'SpawnedEntity])

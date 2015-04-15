@@ -2,6 +2,12 @@
     name: RoachSpriteSheet
     path: space_roaches/sprites/SpaceRat.png
 
+  - asset: texture-region
+    name: RoachSprite
+    texture: RoachSpriteSheet
+    size: [32, 32]
+    top-left: [0, 0]
+
   - asset: animation
     name: RoachWalk
     texture: RoachSpriteSheet
@@ -116,7 +122,7 @@
     components:
       - type: Transform
       - type: SpriteRenderer
-        texture: RoachSpriteSheet
+        texture: RoachSprite
       - type: AnimationController
         loop: true
         animation: RoachWalk
@@ -130,6 +136,7 @@
             density: 1
             friction: 0.7
       - type: EventHub
+      - type: SpawnedEntity
       - type: SpaceRoach
         gib-prefabs: [RoachGib1, RoachGib2, RoachGib3, RoachGib4, RoachGib5]
         speed: 0.01
