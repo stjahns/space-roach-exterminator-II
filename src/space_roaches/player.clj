@@ -192,11 +192,24 @@
     (doseq [fixture (.getFixtureList body)]
       (.setFilterData fixture new-filter))))
 
+(defn- spawn-gibs
+  [system entity]
+  (let [gib-prefabs (:gib-prefabs (e/get-component system entity 'Player))
+        [x y] (:position (e/get-component system entity 'Transform))]
+    (-> system
+        (for-> [gib gib-prefabs]
+               (prefab/instantiate gib {:physicsbody {:x x
+                                                      :y y
+                                                      :angular-velocity (* 5 (- 1 (rand 2)))
+                                                      :velocity-x (* 3 (- 1 (rand 2)))
+                                                      :velocity-y (* 3 (- 1 (rand 2)))}})))))
+
 (defn- kill-player
   [system entity]
   (doto (:body (e/get-component system entity 'PhysicsBody))
     (disable-collision))
   (-> system
+      (spawn-gibs entity)
       (e/update-component entity 'SpriteRenderer #(assoc % :enabled false))
       (e/update-component entity 'Player #(assoc % :dead true))))
 
@@ -209,11 +222,11 @@
     (-> system
         (when-> (e/get-component system other-entity 'SpaceRoach)
                (kill-player entity)))))
-
 (c/defcomponent Player
   :on-pre-render update-player
   :on-event [:on-collision-start on-collide]
   :fields [:move-force {:default 100}
+           :gib-prefabs {:default []}
            :bullet-prefab nil
            :bullet-speed {:default 100}
            :bullet-offset {:default 1}

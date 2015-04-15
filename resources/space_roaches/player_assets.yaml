@@ -103,6 +103,115 @@
       - [2, 0]
       - [3, 0]
 
+  - asset: texture-region
+    name: PlayerHeadGibSprite
+    texture: PlayerSpriteSheet
+    top-left: [1, 161]
+    size: [12, 11]
+
+  - asset: texture-region
+    name: PlayerTorsoGibSprite
+    texture: PlayerSpriteSheet
+    top-left: [0, 174]
+    size: [17, 15]
+
+  - asset: texture-region
+    name: PlayerLegGibSprite
+    texture: PlayerSpriteSheet
+    top-left: [15, 161]
+    size: [8, 12]
+
+  - asset: texture-region
+    name: PlayerArmGibSprite
+    texture: PlayerSpriteSheet
+    top-left: [19, 182]
+    size: [10, 8]
+
+  - asset: texture-region
+    name: PlayerGunGibSprite
+    texture: PlayerSpriteSheet
+    top-left: [25, 161]
+    size: [6, 18]
+
+  - asset: prefab
+    name: PlayerHeadGib
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: PlayerHeadGibSprite
+      - type: PhysicsBody
+        body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: PlayerTorsoGib
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: PlayerTorsoGibSprite
+      - type: PhysicsBody
+        body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: PlayerArmGib
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: PlayerArmGibSprite
+      - type: PhysicsBody
+        body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: PlayerLegGib
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: PlayerLegGibSprite
+      - type: PhysicsBody
+        body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
+
+  - asset: prefab
+    name: PlayerGunGib
+    components:
+      - type: Transform
+      - type: SpriteRenderer
+        texture: PlayerGunGibSprite
+      - type: PhysicsBody
+        body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
+        fixtures:
+          - shape: circle
+            radius: 0.25
+            density: 0.2
+            friction: 0.7
       
   - asset: texture
     name: BulletSprite
@@ -150,6 +259,7 @@
         walking-down-forward-animation: PlayerWalkingAimDownForward
         walk-animation: PlayerWalk
         fire-sound: FireSound
+        gib-prefabs: [PlayerHeadGib, PlayerTorsoGib, PlayerLegGib, PlayerArmGib, PlayerLegGib, PlayerArmGib, PlayerGunGib]
       - type: Transform
       - type: AnimationController
         loop: true
