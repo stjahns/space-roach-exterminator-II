@@ -112,6 +112,7 @@
     name: BulletPrefab
     components:
       - type: Transform
+      - type: EventHub
       - type: Bullet
       - type: SpriteRenderer
         texture: BulletSprite

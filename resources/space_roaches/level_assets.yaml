@@ -63,8 +63,8 @@
       - type: Transform
       - type: PhysicsBody
         body-type: static
-        velocity-x: 0
-        velocity-y: 0
+        category: 1 # 'walls'
+        mask: 7 # collide with everything!
         fixtures:
           - shape: box
             width: 1

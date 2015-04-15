@@ -7,6 +7,7 @@
             [ripple.sprites :as sprites]
             [ripple.prefab :as prefab]
             [ripple.assets :as a]
+            [ripple.event :as event]
             [ripple.physics :as physics]
             [ripple.subsystem :as s])
   (:import [com.badlogic.gdx.math Vector2]
@@ -236,9 +237,19 @@
         (when-> (<= lifetime 0.0)
                 (c/destroy-entity entity)))))
 
+(defn- on-bullet-hit
+  [system entity event]
+  (let [other-entity (-> (:other-fixture event)
+                         (.getUserData)
+                         (:entity))]
+    (-> system
+        (event/send-event other-entity {:event-id :take-damage})
+        (c/destroy-entity entity))))
+
 (c/defcomponent Bullet
   :fields [:lifetime {:default 1}]
-  :on-pre-render handle-bullet-lifetime)
+  :on-pre-render handle-bullet-lifetime
+  :on-event [:on-collision-start on-bullet-hit])
 
 (s/defsubsystem player
   :component-defs ['Player 'Bullet]

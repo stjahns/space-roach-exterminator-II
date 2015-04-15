@@ -95,22 +95,15 @@
       ;; Just destroy the entity for now...
       (c/destroy-entity entity)))
 
-(defn on-collide
-  "When bullet hits a roach, roach should explode"
+(defn on-damaged
   [system entity event]
-  (let [other-entity (-> (:other-fixture event)
-                         (.getUserData)
-                         (:entity))]
-    (-> system
-        (when-> (e/get-component system other-entity 'Bullet)
-               (kill-roach entity)))))
+  (kill-roach system entity))
 
 (c/defcomponent SpaceRoach
-  :on-event [:on-collision-start on-collide]
+  :on-event [:take-damage on-damaged]
   :on-pre-render update-roach
   :fields [:speed {:default 1.0}
            :gib-prefabs {:default []}])
 
 (s/defsubsystem roaches
   :component-defs ['SpaceRoach])
-

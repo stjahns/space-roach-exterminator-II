@@ -55,6 +55,8 @@
         texture: SRoachGib1
       - type: PhysicsBody
         body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
         fixtures:
           - shape: circle
             radius: 0.25
@@ -69,6 +71,8 @@
         texture: SRoachGib2
       - type: PhysicsBody
         body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
         fixtures:
           - shape: circle
             radius: 0.125
@@ -83,6 +87,8 @@
         texture: SRoachGib3
       - type: PhysicsBody
         body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
         fixtures:
           - shape: circle
             radius: 0.25
@@ -97,6 +103,8 @@
         texture: SRoachGib4
       - type: PhysicsBody
         body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
         fixtures:
           - shape: circle
             radius: 0.25
@@ -111,6 +119,8 @@
         texture: SRoachGib5
       - type: PhysicsBody
         body-type: dynamic
+        category: 4 # 'decorations'
+        mask: 1 # collide with level only
         fixtures:
           - shape: circle
             radius: 0.25
