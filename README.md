@@ -7,5 +7,7 @@ A 'remake' of [Space Roach Exterminator](https://dl.dropboxusercontent.com/u/401
 ### Controls
 
 Mouse - Aim
+
 LMB/RMB - Fire
+
 WSAD - Move (WITH YOUR INVISIBLE JETPACK THAT YOU DEFINITELY HAVE)
