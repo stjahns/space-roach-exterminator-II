@@ -3,6 +3,7 @@
 A 'remake' of [Space Roach Exterminator](https://dl.dropboxusercontent.com/u/40178155/SpaceRoachExterminator.html) using the [Ripple](https://github.com/stjahns/ripple) framework.
 
 [Play now!](https://dl.dropboxusercontent.com/u/40178155/space-roach-exterminator-ii.jar)
+(Run with `java -jar space-roach-exterminator-ii.jar` or just double click it if you're lucky enough)
 
 ### Controls
 
